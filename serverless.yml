@@ -1,0 +1,76 @@
+service: serverless-rest-api
+provider:
+  name: aws
+  runtime: nodejs6.10
+  environment:
+    DYNAMODB_TABLE: 'Respie'
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:us-east-1:*:*"
+
+functions:
+  create:
+    handler: Respie/create.create
+    events:
+      - http:
+          path: Respie
+          method: post
+          cors: true
+
+  list:
+    handler: Respie/list.list
+    events:
+      - http:
+          path: Respie
+          method: get
+          cors: true
+
+  get:
+    handler: Respie/get.get
+    events:
+      - http:
+          path: Respie/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: Respie/update.update
+    events:
+      - http:
+          path: Respie/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: Respie/delete.delete
+    events:
+      - http:
+          path: Respie/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    RespieDynamoDbTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: 'Respie'

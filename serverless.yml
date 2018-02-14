@@ -2,8 +2,7 @@ service: serverless-rest-api
 provider:
   name: aws
   runtime: nodejs6.10
-  environment:
-    DYNAMODB_TABLE: 'Respie'
+  
   iamRoleStatements:
     - Effect: Allow
       Action:
